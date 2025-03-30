@@ -1,0 +1,44 @@
+import random
+
+N = 8  # 체스판 크기
+
+def generate_individual():
+    return [random.randint(0, N - 1) for _ in range(N)]
+
+def fitness(individual):
+    non_attacking = 0
+    for i in range(N):
+        for j in range(i + 1, N):
+            if individual[i] != individual[j] and abs(individual[i] - individual[j]) != abs(i - j):
+                non_attacking += 1
+    return non_attacking
+
+def crossover(parent1, parent2):
+    point = random.randint(1, N - 2)
+    return parent1[:point] + parent2[point:]
+
+def mutate(individual):
+    idx = random.randint(0, N - 1)
+    val = random.randint(0, N - 1)
+    individual[idx] = val
+    return individual
+
+# 초기 개체군 생성
+population = [generate_individual() for _ in range(100)]
+
+for generation in range(1000):
+    population.sort(key=lambda x: -fitness(x))
+    if fitness(population[0]) == 28:  # 8개 퀸이 서로 안 공격하는 경우
+        break
+    new_population = population[:10]  # 상위 10개 선택
+    while len(new_population) < 100:
+        parent1, parent2 = random.sample(new_population[:10], 2)
+        child = crossover(parent1, parent2)
+        if random.random() < 0.1:
+            child = mutate(child)
+        new_population.append(child)
+    population = new_population
+
+solution = population[0]
+print("최적 해:", solution)
+print("적합도:", fitness(solution))
