@@ -42,3 +42,10 @@ for generation in range(1000):
 solution = population[0]
 print("최적 해:", solution)
 print("적합도:", fitness(solution))
+
+
+
+#Result
+
+최적 해: [5, 2, 6, 3, 0, 7, 1, 4]
+적합도: 28
